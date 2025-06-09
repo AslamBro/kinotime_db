@@ -1,0 +1,91 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider          = "mysql"
+  url               = env("DATABASE_URL")
+  shadowDatabaseUrl = "mysql://kinotime_user_v2:StrongPass456@38.242.134.221:3306/prisma_migrate_shadow_db_81c80f5b_d8a0_468b_9b37_14fee4287f56"
+}
+ 
+model Genre {
+  id        String   @id @default(cuid())
+  name      String   @unique
+
+  movies    Movie[]   @relation("MovieGenres")
+  serials   Serial[]  @relation("SerialGenres")
+}
+
+model Actor {
+  id        String   @id @default(cuid())
+  name      String @unique
+  profile   String?
+
+  movies    Movie[]   @relation("MovieActors")
+  serials   Serial[]  @relation("SerialActors")
+}
+
+model Movie {
+  id               String   @id @default(cuid())
+  tmdbId           Int      @unique
+  imdbRating       Float?
+  title            String  @db.Text
+  originalTitle    String?@db.Text
+  overview         String?@db.Text
+  releaseDate      DateTime?
+  runtime          Int?
+  status           String?
+  poster           String?@db.Text
+  backdrop         String?@db.Text
+  voteAverage      Float?
+  voteCount        Int?
+  popularity       Float?
+  originalLanguage String?
+  budget           Int?
+  revenue          Int?
+
+  genres           Genre[]   @relation("MovieGenres")
+  actors           Actor[]   @relation("MovieActors")
+
+  trailers         Json?
+  productionCompanies Json?
+  productionCountries Json?
+  spokenLanguages     Json?
+  images           Json?
+
+  director         String?
+
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+}
+
+model Serial {
+  id               String   @id @default(cuid())
+  tmdbId           Int      @unique
+  imdbRating       Float?
+  title            String@db.Text
+  originalTitle    String?@db.Text
+  overview         String?@db.Text
+  firstAirDate     DateTime?
+  status           String?
+  poster           String?@db.Text
+  backdrop         String?@db.Text
+  voteAverage      Float?
+  voteCount        Int?
+  popularity       Float?
+  originalLanguage String?
+
+  genres           Genre[]   @relation("SerialGenres")
+  actors           Actor[]   @relation("SerialActors")
+
+  trailers         Json?
+  productionCompanies Json?
+  productionCountries Json?
+  spokenLanguages     Json?
+  images           Json?
+
+  director         String?
+
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+}
